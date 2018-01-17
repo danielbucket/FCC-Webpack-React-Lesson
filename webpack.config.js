@@ -4,10 +4,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const port = process.env.PORT || 3000;
 
 module.exports = {
-  entry: './src/index.js',
-  entry: ['react-hot-loader/patch', './src/index.js'],
+  entry: {
+    vendor: ['semantic-ui-react'],
+    app: ['react-hot-loader/patch', './src/index.js']
+  },
   output: {
-    filename: 'bundle.[hash].js',
+    filename: '[name].[hash].js',
     publicPath: '/'
   },
   devtool: 'inline-source-map',
@@ -37,12 +39,16 @@ module.exports = {
     ]
   },
   plugins: [
-  	new webpack.NamedModulesPlugin(),
-  	new webpack.HotModuleReplacementPlugin(),
-  	new webpack.NoEmitOnErrorsPlugin(),
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
     new HtmlWebpackPlugin({
       template: 'public/index.html',
-      favicon: 'public/bucket-icon-yellow-b.ico'
+      favicon: 'public/favicon.ico'
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: ['vendor'],
+      minChunks: Infinity
     })
   ],
   devServer: {
